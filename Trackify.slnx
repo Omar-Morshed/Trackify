@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="Relationship.excalidraw" />
+  </Folder>
+  <Project Path="Trackify.API/Trackify.API.csproj" />
+  <Project Path="Trackify.Application/Trackify.Application.csproj" />
+  <Project Path="Trackify.Domain/Trackify.Domain.csproj" />
+  <Project Path="Trackify.Infrastructure/Trackify.Infrastructure.csproj" />
+</Solution>
