@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Trackify.Application;
 using Trackify.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 }); */
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
-
+builder.Services.AddApplicationConfigurations();
 
 var app = builder.Build();
 

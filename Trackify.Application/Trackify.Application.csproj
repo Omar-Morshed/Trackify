@@ -11,17 +11,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
-    <Folder Include="Features\Projects\" />
     <Folder Include="Features\Projects\Commands\" />
+    <Folder Include="Features\Projects\Commands\CreateProject\" />
     <Folder Include="Features\Projects\DTOs\" />
-    <Folder Include="Features\Projects\Queries\" />
+    <Folder Include="Features\Projects\Queries\GetProjectById\" />
     <Folder Include="Features\Projects\Validators\" />
     <Folder Include="Features\Tasks\" />
     <Folder Include="Features\Tasks\Commands\" />
+    <Folder Include="Features\Tasks\Commands\CreateTask\" />
+    <Folder Include="Features\Tasks\Commands\DeleteTask\" />
+    <Folder Include="Features\Tasks\Commands\UpdateTask\" />
     <Folder Include="Features\Tasks\DTOs\" />
     <Folder Include="Features\Tasks\Queries\" />
+    <Folder Include="Features\Tasks\Queries\GetTaskById\" />
+    <Folder Include="Features\Tasks\Queries\GetTasks\" />
     <Folder Include="Features\Tasks\Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.2.0" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,10 @@
+using System;
+using MediatR;
+using Trackify.Domain.Entities;
+
+namespace Trackify.Application.Features.Projects.Queries.GetProjects;
+
+public class GetProjectsQuery : IRequest<List<Project>>
+{
+
+}
