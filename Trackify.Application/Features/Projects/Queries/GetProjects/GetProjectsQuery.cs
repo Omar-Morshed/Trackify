@@ -4,7 +4,4 @@ using Trackify.Domain.Entities;
 
 namespace Trackify.Application.Features.Projects.Queries.GetProjects;
 
-public class GetProjectsQuery : IRequest<List<Project>>
-{
-
-}
+public record GetProjectsQuery : IRequest<IEnumerable<Project>> {}

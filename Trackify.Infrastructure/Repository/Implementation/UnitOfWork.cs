@@ -20,4 +20,9 @@ public class UnitOfWork : IUnitOfWork
     {
         return _context.SaveChanges();
     }
+
+    public async Task<int> SaveAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace Trackify.Application.Interface;
 
-public interface ITaskRepository
+public interface ITaskRepository : IGenericRepository<Task>
 {
 
 }
