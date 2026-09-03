@@ -1,11 +1,13 @@
 using System;
+using Mapster;
 using MediatR;
+using Trackify.Application.Features.Projects.DTOs;
 using Trackify.Application.Interface;
 using Trackify.Domain.Entities;
 
 namespace Trackify.Application.Features.Projects.Queries.GetProjectById;
 
-public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, Project?>
+public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, ProjectInfoDTO?>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,8 +16,10 @@ public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, P
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Project> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ProjectInfoDTO?> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _unitOfWork.ProjectRepository.GetByIdAsync(request.Id);
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(request.Id);
+        var projectInfo = project.Adapt<ProjectInfoDTO>();
+        return projectInfo;
     }
 }

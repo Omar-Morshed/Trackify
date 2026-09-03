@@ -1,9 +1,8 @@
 using System;
 using MediatR;
+using Trackify.Application.Features.Tasks.DTOs;
 
 namespace Trackify.Application.Features.Tasks.Commands.UpdateTask;
 
-public class UpdateTaskCommand : IRequest<int>
-{
-
-}
+public record UpdateTaskCommand(Guid Id, UpdateTaskRequest Task) : IRequest<bool>
+{}

@@ -1,10 +1,11 @@
 using System;
+using Mapster;
 using MediatR;
 using Trackify.Application.Interface;
 
 namespace Trackify.Application.Features.Tasks.Commands.UpdateTask;
 
-public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, int>
+public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -12,8 +13,13 @@ public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, int>
     {
         _unitOfWork = unitOfWork;
     }
-    public Task<int> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var task = await _unitOfWork.TaskRepository.GetByIdAsync(request.Id);
+        if (task == null)
+            return false;
+        request.Task.Adapt(task);
+        _unitOfWork.TaskRepository.Update(task);
+        return await _unitOfWork.SaveAsync() == 1;
     }
 }

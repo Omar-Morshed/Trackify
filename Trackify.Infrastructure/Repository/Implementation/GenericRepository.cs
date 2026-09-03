@@ -12,35 +12,35 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     {
         dbSet = context.Set<TEntity>();
     }
-    public async Task AddAsync(TEntity entity)
+    public virtual void Add(TEntity entity)
     {
-        await dbSet.AddAsync(entity);
+        dbSet.Add(entity);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public virtual async Task DeleteAsync(Guid id)
     {
         var entity = await dbSet.FindAsync(id);
         if (entity != null)
             dbSet.Remove(entity);
     }
 
-    public void Delete(TEntity entity)
+    public virtual void Delete(TEntity entity)
     {
         dbSet.Remove(entity);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await dbSet.ToListAsync();
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
         var entity = await dbSet.FindAsync(id);
         return entity ?? null;
     }
 
-    public void Update(TEntity entity)
+    public virtual void Update(TEntity entity)
     {
         dbSet.Update(entity);
     }

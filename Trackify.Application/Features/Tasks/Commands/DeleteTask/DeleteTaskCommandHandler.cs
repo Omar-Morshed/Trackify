@@ -4,7 +4,7 @@ using Trackify.Application.Interface;
 
 namespace Trackify.Application.Features.Tasks.Commands.DeleteTask;
 
-public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
+public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -12,8 +12,9 @@ public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, int>
     {
         _unitOfWork = unitOfWork;
     }
-    public Task<int> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.TaskRepository.DeleteAsync(request.Id);
+        return await _unitOfWork.SaveAsync() == 1;
     }
 }

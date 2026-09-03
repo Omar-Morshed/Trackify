@@ -3,7 +3,5 @@ using MediatR;
 
 namespace Trackify.Application.Features.Tasks.Commands.DeleteTask;
 
-public class DeleteTaskCommand : IRequest<int>
-{
-
-}
+public record DeleteTaskCommand(Guid Id) : IRequest<bool>
+{}

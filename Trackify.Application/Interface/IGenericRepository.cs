@@ -4,7 +4,7 @@ namespace Trackify.Application.Interface;
 
 public interface IGenericRepository<TEntity> where TEntity : class
 {
-    Task AddAsync(TEntity entity);
+    void Add(TEntity entity);
     Task<TEntity?> GetByIdAsync(Guid id);
     Task<IEnumerable<TEntity>> GetAllAsync();
     void Update(TEntity entity);

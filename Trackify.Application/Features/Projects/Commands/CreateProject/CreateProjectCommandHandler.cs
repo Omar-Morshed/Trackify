@@ -26,7 +26,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
                 Title = request.Title,
                 Description = request.Description,
             };
-            await _unitOfWork.ProjectRepository.AddAsync(project);
+            _unitOfWork.ProjectRepository.Add(project);
             await _unitOfWork.SaveAsync();
             return true;
         }

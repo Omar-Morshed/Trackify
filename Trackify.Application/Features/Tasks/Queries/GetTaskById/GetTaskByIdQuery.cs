@@ -1,9 +1,10 @@
 using System;
 using MediatR;
+using Trackify.Application.Features.Tasks.DTOs;
 
 namespace Trackify.Application.Features.Tasks.Queries.GetTaskById;
 
-public class GetTaskByIdQuery : IRequest<Domain.Entities.Task>
+public record GetTaskByIdQuery(Guid Id) : IRequest<TaskInfoDTO?>
 {
 
 }
