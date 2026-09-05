@@ -48,10 +48,10 @@ namespace Trackify.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteTaskAsync(DeleteTaskCommand command)
+        [HttpDelete("{Id:guid}")]
+        public async Task<IActionResult> DeleteTaskAsync(Guid Id)
         {
-            bool isDeleted = await _sender.Send(command);
+            bool isDeleted = await _sender.Send(new DeleteTaskCommand(Id));
             if(!isDeleted)
                 return BadRequest("Didn't Delete");
             return Ok();
