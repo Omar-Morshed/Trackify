@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Docs/">
     <File Path="Drafts.md" />
+    <File Path="Query.sql" />
     <File Path="Relationship.excalidraw" />
   </Folder>
   <Project Path="Trackify.API/Trackify.API.csproj" />

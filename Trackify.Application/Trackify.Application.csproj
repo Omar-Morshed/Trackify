@@ -13,6 +13,14 @@
   <ItemGroup>
     <Folder Include="Behaviors\" />
     <Folder Include="Configuration\" />
+    <Folder Include="Features\Comments\Commands\" />
+    <Folder Include="Features\Comments\Commands\AddComment\" />
+    <Folder Include="Features\Comments\Commands\DeleteComment\" />
+    <Folder Include="Features\Comments\Commands\UpdateComment\" />
+    <Folder Include="Features\Comments\Queries\" />
+    <Folder Include="Features\Comments\Queries\GetCommentById\" />
+    <Folder Include="Features\Comments\Queries\GetTaskComments\" />
+    <Folder Include="Features\Comments\Validators\" />
     <Folder Include="Features\Projects\Commands\" />
     <Folder Include="Features\Projects\Commands\CreateProject\" />
     <Folder Include="Features\Projects\Commands\DeleteProject\" />

@@ -4,3 +4,5 @@
 
 ## Need to do :-
 - [X] Make the `PUT` & `DELETE` Methods in the Project Controller
+- [ ] Finish all the Comment CQRS 
+- [ ] Make the Validators for the Comments

@@ -16,11 +16,16 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, bool>
     }
     public async Task<bool> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
+        //* Prevent adding to not existing project
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(request.ProjectId);
+        
+        if(project is null) return false;
+
         var task = new Task()
         {
             Id = Guid.NewGuid(),
             Name = request.Name,
-            Description = request.Description,
+            Description = request.Description ?? "No Description",
             ProjectId = request.ProjectId,
             Comments = new List<Comment>()
         };
