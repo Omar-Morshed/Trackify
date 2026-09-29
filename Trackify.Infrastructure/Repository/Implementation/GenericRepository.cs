@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Trackify.Application.Interface;
 
@@ -43,6 +44,11 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     public virtual void Update(TEntity entity)
     {
         dbSet.Update(entity);
+    }
+
+    public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await dbSet.AnyAsync(predicate);
     }
 
 }

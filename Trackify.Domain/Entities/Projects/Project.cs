@@ -1,6 +1,7 @@
 using System;
 
-namespace Trackify.Domain.Entities;
+namespace Trackify.Domain.Entities.Projects;
+using Task = Domain.Entities.Tasks.Task;
 
 public class Project : BaseEntity
 {

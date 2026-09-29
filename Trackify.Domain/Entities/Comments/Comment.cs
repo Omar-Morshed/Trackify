@@ -1,6 +1,7 @@
 using System;
-
-namespace Trackify.Domain.Entities;
+using Trackify.Domain.Entities.Tasks;
+using Task = Trackify.Domain.Entities.Tasks.Task;
+namespace Trackify.Domain.Entities.Comments;
 
 public class Comment : BaseEntity
 {

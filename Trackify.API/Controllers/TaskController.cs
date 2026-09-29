@@ -1,11 +1,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Trackify.Application.Features.Tasks.Commands.ChangeTaskStatus;
 using Trackify.Application.Features.Tasks.Commands.CreateTask;
 using Trackify.Application.Features.Tasks.Commands.DeleteTask;
 using Trackify.Application.Features.Tasks.Commands.UpdateTask;
+using Trackify.Application.Features.Tasks.DTOs;
 using Trackify.Application.Features.Tasks.Queries.GetTaskById;
 using Trackify.Application.Features.Tasks.Queries.GetTasks;
+using TaskStatus = Trackify.Domain.Enums.TaskStatus; //! NOT BEST PRACTICE !
 
 namespace Trackify.API.Controllers
 {
@@ -23,47 +26,93 @@ namespace Trackify.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTasksAsync()
         {
-            var tasks = await _sender.Send(new GetTasksQuery());
-            if (tasks.Count() == 0)
-                return NotFound();
+            var result = await _sender.Send(new GetTasksQuery());
+            if (result.IsSuccess)
+                return Ok(result.Data);
 
-            return Ok(tasks);
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound
+            });
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetTaskByIdAsync(Guid id)
         {
-            var task = await _sender.Send(new GetTaskByIdQuery(id));
-            if (task is null)
-                return NotFound();
-            return Ok(task);
+            var result = await _sender.Send(new GetTaskByIdQuery(id));
+            if (result.IsSuccess)
+                return Ok(result.Data);
+
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound
+            });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateTaskAsync(CreateTaskCommand command)
         {
-            bool isCreated = await _sender.Send(command);
-            if(!isCreated)
-                return BadRequest("Didn't Create !");
-            return Ok();
+            var result = await _sender.Send(command);
+            if (result.IsSuccess)
+                return Ok();
+
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest,
+            });
+        }
+
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTaskAsync(UpdateTaskCommand command)
+        {
+            var result = await _sender.Send(command);
+            if (result.IsSuccess)
+                return Ok();
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest,
+            });
+        }
+
+        [HttpPut("{TaskId:guid}/status")]
+        public async Task<IActionResult> ChangeTaskStatusAsync(Guid TaskId, [FromBody] ChangeTaskStatusDTO Status)
+        {
+            var result = await _sender.Send(new ChangeTaskStatusCommand(TaskId, Status.NewStatus));
+
+            if (result.IsSuccess)
+                return Ok();
+
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest,
+            });
+
         }
 
         [HttpDelete("{Id:guid}")]
         public async Task<IActionResult> DeleteTaskAsync(Guid Id)
         {
-            bool isDeleted = await _sender.Send(new DeleteTaskCommand(Id));
-            if(!isDeleted)
-                return BadRequest("Didn't Delete");
-            return Ok();
-        }
+            var result = await _sender.Send(new DeleteTaskCommand(Id));
+            if (result.IsSuccess)
+                return Ok();
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateTaskAsync(UpdateTaskCommand command)
-        {
-            bool isUpdated = await _sender.Send(command);
-            if(!isUpdated)
-                return BadRequest("Didn't Update");
-            return Ok();
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound,
+            });
         }
     }
 }

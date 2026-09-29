@@ -23,47 +23,75 @@ namespace Trackify.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProjectsAsync()
         {
-            var project = await _sender.Send(new GetProjectsQuery());
-            return Ok(project);
+            var result = await _sender.Send(new GetProjectsQuery());
+            if (result.IsSuccess)
+                return Ok(result.Data);
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound,
+            });
         }
-        
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetProjectByIdAsync(Guid id)
         {
-            var project = await _sender.Send(new GetProjectByIdQuery(id));
-            if(project is null)
-                return NotFound();
-            return Ok(project);
+            var result = await _sender.Send(new GetProjectByIdQuery(id));
+            if (result.IsSuccess)
+                return Ok(result.Data);
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound,
+            });
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProjectAsync(CreateProjectCommand command)
         {
-            var isCreated = await _sender.Send(command);
-            if (isCreated)
-                return Ok();
-            return BadRequest("The Project didn't create !");
+            var result = await _sender.Send(command);
+            if (result.IsSuccess)
+                return Ok(result.Data);
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest
+            });
         }
 
         /* [HttpPut]
         public IActionResult MyProperty { get; set; } */
-        
+
         [HttpPut]
         public async Task<IActionResult> UpdateProjectAsync(UpdateProjectCommand command)
         {
-            var isUpdated = await _sender.Send(command);
-            if(!isUpdated)
-                return BadRequest("Didn't Update");
-            return Ok();
+            var result = await _sender.Send(command);
+            if (result.IsSuccess)
+                return Ok();
+
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest
+            });
         }
-        
+
         [HttpDelete("{Id:guid}")]
         public async Task<IActionResult> DeleteProjectAsync(Guid Id)
         {
-            var isDeleted = await _sender.Send(new DeleteProjectCommand(Id));
-            if(!isDeleted)
-                return BadRequest("Didn't Delete");
-            return Ok();
+            var result = await _sender.Send(new DeleteProjectCommand(Id));
+            if (result.IsSuccess)
+                return Ok();
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest
+            });
         }
     }
 }

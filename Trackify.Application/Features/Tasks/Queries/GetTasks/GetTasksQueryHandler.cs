@@ -3,10 +3,12 @@ using Mapster;
 using MediatR;
 using Trackify.Application.Features.Tasks.DTOs;
 using Trackify.Application.Interface;
+using Trackify.Domain.Abstractions;
+using Trackify.Domain.Entities.Tasks;
 
 namespace Trackify.Application.Features.Tasks.Queries.GetTasks;
 
-public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, IEnumerable<TaskInfoDTO>>
+public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, Result<IEnumerable<TaskInfoDTO>>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,10 +16,14 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, IEnumerable<T
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<IEnumerable<TaskInfoDTO>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TaskInfoDTO>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
         var tasksEntities = await _unitOfWork.TaskRepository.GetAllAsync();
+
         var tasksInfo = tasksEntities.Adapt<IEnumerable<TaskInfoDTO>>();
-        return tasksInfo;
+
+        if (tasksInfo is null || !tasksInfo.Any()) return TaskErrors.NotFound;
+
+        return Result<IEnumerable<TaskInfoDTO>>.Success(tasksInfo);
     }
 }

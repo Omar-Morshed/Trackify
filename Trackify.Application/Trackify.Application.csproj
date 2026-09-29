@@ -29,6 +29,7 @@
     <Folder Include="Features\Projects\Queries\GetProjectById\" />
     <Folder Include="Features\Tasks\" />
     <Folder Include="Features\Tasks\Commands\" />
+    <Folder Include="Features\Tasks\Commands\ChangeTaskStatus\" />
     <Folder Include="Features\Tasks\Commands\CreateTask\" />
     <Folder Include="Features\Tasks\Commands\DeleteTask\" />
     <Folder Include="Features\Tasks\Commands\UpdateTask\" />

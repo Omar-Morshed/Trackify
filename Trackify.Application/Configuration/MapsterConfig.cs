@@ -1,7 +1,7 @@
 using System;
 using Mapster;
 using Trackify.Application.Features.Tasks.DTOs;
-using Task = Trackify.Domain.Entities.Task;
+using Task = Trackify.Domain.Entities.Tasks.Task;
 
 namespace Trackify.Application.Configuration;
 

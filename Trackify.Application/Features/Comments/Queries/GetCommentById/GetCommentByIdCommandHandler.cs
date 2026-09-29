@@ -3,10 +3,12 @@ using Mapster;
 using MediatR;
 using Trackify.Application.Features.Comments.DTOs;
 using Trackify.Application.Interface;
+using Trackify.Domain.Abstractions;
+using Trackify.Domain.Entities.Comments;
 
 namespace Trackify.Application.Features.Comments.Queries.GetCommentById;
 
-public class GetCommentByIdCommandHandler : IRequestHandler<GetCommentByIdCommand, CommentDTO?>
+public class GetCommentByIdCommandHandler : IRequestHandler<GetCommentByIdCommand, Result<AddCommentDTO>?>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,10 +16,12 @@ public class GetCommentByIdCommandHandler : IRequestHandler<GetCommentByIdComman
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<CommentDTO?> Handle(GetCommentByIdCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AddCommentDTO>?> Handle(GetCommentByIdCommand request, CancellationToken cancellationToken)
     {
         var comment = await _unitOfWork.CommentRepository.GetByIdAsync(request.CommentId);
-        var commentDTO = comment.Adapt<CommentDTO>();
+        if(comment is null) return CommentErrors.NotFound;
+
+        var commentDTO = comment.Adapt<AddCommentDTO>();
         return commentDTO;
     }
 }

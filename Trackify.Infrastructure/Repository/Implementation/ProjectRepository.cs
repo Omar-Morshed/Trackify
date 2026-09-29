@@ -1,6 +1,7 @@
 using System;
 using Trackify.Application.Interface;
 using Trackify.Domain.Entities;
+using Trackify.Domain.Entities.Projects;
 
 namespace Trackify.Infrastructure.Repository.Implementation;
 

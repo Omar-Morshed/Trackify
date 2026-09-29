@@ -24,43 +24,78 @@ namespace Trackify.API.Controllers
         [HttpGet("GetCommentsByTaskId/{TaskId:guid}")]
         public async Task<IActionResult> GetCommentsByTaskIdAsync(Guid TaskId)
         {
-            var taskComments = await _sender.Send(new GetTaskCommentsCommand(TaskId));
-            return Ok(taskComments);
+            var result = await _sender.Send(new GetTaskCommentsCommand(TaskId));
+            if (result.IsSuccess)
+                return Ok(result.Data);
+
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound
+            });
         }
         [HttpGet("{CommentId:guid}")]
         public async Task<IActionResult> GetCommentByIdAsync(Guid CommentId)
         {
-            var comment = await _sender.Send(new GetCommentByIdCommand(CommentId));
-            if (comment == null) return NotFound("The Comment Not Found !");
-            return Ok(comment);
+            var result = await _sender.Send(new GetCommentByIdCommand(CommentId));
+            if (result.IsSuccess)
+                return Ok(result.Data);
+
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound
+            });
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] CommentDTO comment)
+        public async Task<IActionResult> PostAsync([FromBody] AddCommentDTO comment)
         {
-            var isAdded = await _sender.Send(new AddCommentCommand(comment));
+            var result = await _sender.Send(new AddCommentCommand(comment));
 
-            if (!isAdded) return BadRequest("Failed to Add !");
+            if (result.IsSuccess)
+                return Created();
 
-            return Ok("Added Successfully !");
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest
+            });
         }
 
 
         [HttpPut("{CommentId:guid}")]
-        public async Task<IActionResult> PutAsync(Guid CommentId, [FromBody] CommentDTO commentDTO)
+        public async Task<IActionResult> PutAsync(Guid CommentId, [FromBody] UpdateCommentDTO commentDTO)
         {
-            var isUpdated = await _sender.Send(new UpdateCommentCommand(CommentId, commentDTO));
-            if (!isUpdated) return BadRequest("Failed To Update !");
-            return Ok("Updated Successfully !");
+            var result = await _sender.Send(new UpdateCommentCommand(CommentId, commentDTO));
+            if (result.IsSuccess)
+                return NoContent();
+
+            return BadRequest(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status400BadRequest
+            });
         }
 
         [HttpDelete("{CommentId:guid}")]
         public async Task<IActionResult> DeleteAsync(Guid CommentId)
         {
-            var isDeleted = await _sender.Send(new DeleteCommentCommand(CommentId));
-            if (!isDeleted) return BadRequest("Failed To Delete !");
-            return Ok("Deleted Successfully !");
+            var result = await _sender.Send(new DeleteCommentCommand(CommentId));
+            if (result.IsSuccess)
+                return NoContent();
+
+            return NotFound(new ProblemDetails()
+            {
+                Title = result.Error.Code,
+                Detail = result.Error.Description,
+                Status = StatusCodes.Status404NotFound
+            });
         }
     }
 }

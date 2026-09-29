@@ -1,10 +1,12 @@
 using System;
 using MediatR;
 using Trackify.Application.Interface;
+using Trackify.Domain.Abstractions;
+using Trackify.Domain.Entities.Projects;
 
 namespace Trackify.Application.Features.Projects.Commands.DeleteProject;
 
-public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, bool>
+public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -13,9 +15,13 @@ public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand,
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<bool> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
     {
-        await _unitOfWork.ProjectRepository.DeleteAsync(request.Id);
-        return await _unitOfWork.SaveAsync() == 1;
+        var project = await _unitOfWork.ProjectRepository.GetByIdAsync(request.Id);
+        if (project is null) return ProjectErrors.NotFound;
+
+        _unitOfWork.ProjectRepository.Delete(project);
+        await _unitOfWork.SaveAsync();
+        return Result.Success();
     }
 }

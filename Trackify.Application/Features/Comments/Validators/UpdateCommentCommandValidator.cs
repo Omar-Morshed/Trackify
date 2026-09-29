@@ -12,7 +12,5 @@ public class UpdateCommentCommandValidator : AbstractValidator<UpdateCommentComm
             .NotEmpty().WithMessage("The Comment Id is required");
         RuleFor(c => c.CommentDTO.Content)
             .NotEmpty().WithMessage("The Comment Content is required");
-        RuleFor(c => c.CommentDTO.TaskId)
-            .NotEmpty().WithMessage("The Task Id is required");
     }
 }

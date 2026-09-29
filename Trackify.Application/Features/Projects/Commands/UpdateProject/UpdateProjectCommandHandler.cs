@@ -2,10 +2,12 @@ using System;
 using Mapster;
 using MediatR;
 using Trackify.Application.Interface;
+using Trackify.Domain.Abstractions;
+using Trackify.Domain.Entities.Projects;
 
 namespace Trackify.Application.Features.Projects.Commands.UpdateProject;
 
-public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, bool>
+public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,13 +16,18 @@ public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand,
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<bool> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
     {
         var project = await _unitOfWork.ProjectRepository.GetByIdAsync(request.Id);
         if (project == null)
-            return false;
+            return ProjectErrors.NotFound;
+
         request.Project.Adapt(project);
+
         _unitOfWork.ProjectRepository.Update(project);
-        return await _unitOfWork.SaveAsync() == 1;
+
+        await _unitOfWork.SaveAsync();
+
+        return Result.Success();
     }
 }
